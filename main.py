@@ -37,27 +37,35 @@ class Food(pyglet.sprite.Sprite):
         self.x = x
         self.y = y
         self.scale = 0.05
+        
 
     def checkLineCollision(self, P1, P2):
         """
         Determine whether the line from P1 to P2 intersects the food circle
+
+        Credit for this goes to the answer in this question - thank you 'Gareth Rees'
+        https://codereview.stackexchange.com/questions/86421/line-segment-to-circle-collision-algorithm
         """
         Q = np.array((self.x, self.y), dtype=np.float64)  # Circle pos - float 64 to prevent compute errors
         r = 6                                             # Circle radius
         V = np.subtract(P2, P1)                           # Vector along line segment
 
+        # compute the coefficients
         a = np.dot(V, V)
         b = 2 * np.dot(V, np.subtract(P1, Q))
         c = np.dot(P1, P1) + np.dot(Q,Q) - 2 * np.dot(P1, Q) - r**2
 
+        # check if discriminent is negative
         disc = b**2 - 4 * a * c
         if disc < 0:
             return False
         else:
+            # check if line segment is long enough to collide with circle
             sqrt_disc = math.sqrt(disc)
             t1 = (-b + sqrt_disc) / (2 * a)
             t2 = (-b - sqrt_disc) / (2 * a)
-
+            
+            # return true or false according to above
             if not (0 <= t1 <= 1 or 0 <= t2 <= 1):
                 return False
             else:
@@ -120,9 +128,10 @@ class Creature(pyglet.sprite.Sprite):
     def draw(self):
         super(Creature, self).draw()
 
-        self.draw_eyes(self.rotation, 100)
-        self.draw_eyes(self.rotation + 20, 100)
-        self.draw_eyes(self.rotation - 20, 100)
+        # draw the 3 eyes of the creatures
+        #self.draw_eyes(self.rotation, 100)
+        #self.draw_eyes(self.rotation + 20, 100)
+        #self.draw_eyes(self.rotation - 20, 100)
 
     def move(self, food):
         """
